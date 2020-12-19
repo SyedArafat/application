@@ -1,18 +1,16 @@
 <template>
     <div class="container">
         <div class="col-md-6 col-md-offset-3">
-            <form>
+            <form @submit.prevent = "handleSubmit">
                 <div class="form-group">
                     <label for="email">Email address:</label>
-                    <input type="email" class="form-control" id="email">
+                    <input type="email" v-model = "email" class="form-control" id="email">
                 </div>
                 <div class="form-group">
                     <label for="pwd">Password:</label>
-                    <input type="password" class="form-control" id="pwd">
+                    <input type="password" v-model = "password" class="form-control" id="pwd">
                 </div>
-                <div class="checkbox">
-                    <label><input type="checkbox"> Remember me</label>
-                </div>
+
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>
         </div>
@@ -20,7 +18,25 @@
 </template>
 
 <script>
+    import axios from 'axios';
+
     export default {
-        name : 'Login'
+        name : 'Login',
+        data () {
+            return {
+                email    : '',
+                password : ''
+            }
+        },
+        methods : {
+             async handleSubmit() {
+                const response = await axios.post('http://localhost/products-api/public/api/login', {
+                    email : this.email,
+                    password : this.password
+                });
+                localStorage.setItem('token', this.response.data.data.token);
+                console.log(response);
+            }
+        }
     }
 </script>
