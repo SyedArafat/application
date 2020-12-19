@@ -11,7 +11,7 @@
                     <input type="password" v-model = "password" class="form-control" id="pwd">
                 </div>
 
-                <button type="submit" class="btn btn-default">Submit</button>
+                <button type="submit" class="btn btn-default">Login</button>
             </form>
         </div>
     </div>
@@ -19,23 +19,34 @@
 
 <script>
     import axios from 'axios';
+    import swal from 'sweetalert';
 
     export default {
         name : 'Login',
         data () {
             return {
                 email    : '',
-                password : ''
+                password : '',
             }
         },
         methods : {
-             async handleSubmit() {
-                const response = await axios.post('http://localhost/products-api/public/api/login', {
-                    email : this.email,
-                    password : this.password
-                });
-                localStorage.setItem('token', this.response.data.data.token);
-                console.log(response);
+            async handleSubmit() {
+                let formData = new FormData();
+                formData.append("email", this.email);
+                formData.append("password", this.password);
+                const response = await axios.post('http://localhost/products-api/public/api/login', formData);
+                if (response.data.code === 200) {
+                    localStorage.setItem('token', response.data.data.token);
+                    await this.$store.dispatch('user', response.data.data.user);
+                    await this.$router.push('/');
+
+                }
+                else {
+                    swal("Wrong email or password!", {
+                        icon: "error",
+                    });
+                }
+
             }
         }
     }

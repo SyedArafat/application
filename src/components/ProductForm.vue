@@ -23,7 +23,7 @@
 
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label for="image">Product Image <span class="required">*</span></label>
+                        <label for="image">Product Image</label>
                         <input type="file" name="image" ref="image" required class="form-control" id="image" placeholder="Image" @change="handleChange" :value="form.image">
                     </div>
                     <div class="form-group col-md-6">
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <button type="submit" class="btn btn-primary" @click="onFormSubmit">Add Product</button>
+                    <button type="submit" :class="btnClass" @click="onFormSubmit">{{ btnName }}</button>
                 </div>
             </form>
             </div>
@@ -52,11 +52,14 @@
         },
         data () {
             return {
-                file : ''
+                file : '',
+                btnName : "Save",
+                btnClass : "ui primary button submit-button"
             }
         },
         methods : {
             handleChange(event) {
+                console.log(event.target);
                 const {name, value} = event.target;
                 let form = this.form;
                 if (name === "image") this.file = ( this.$refs.image.files[0]);
@@ -96,9 +99,15 @@
                 this.form.product_id = '';
                 this.form.price = '';
                 this.form.is_edit = false;
+                // this.$refs.image.value = null;
 
                 // document.querySelector('.form').reset();
             }
+        },
+        updated() {
+            if(this.form.is_edit)
+                this.btnName = "Update";
+                this.btnClass = "ui orange button submit-button"
         }
     }
 </script>
